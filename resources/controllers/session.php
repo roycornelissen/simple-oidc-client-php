@@ -1,6 +1,10 @@
-
 <?php
-
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    error_log("Debug: HTTPS is set to on.");
+    $_SERVER['HTTPS'] = 'on';
+}
+error_log('Session cookie params: ' . json_encode(session_get_cookie_params()));
+error_log('Session ID: ' . session_id());
 include __DIR__ . '/../../vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
@@ -9,8 +13,14 @@ include __DIR__ . '/../../config.php';
 include __DIR__ . '/../../src/MitreIdConnectUtils.php';
 
 if (!isset($_SESSION)) {
-    session_set_cookie_params(0, '/' . $sessionName);
-    session_name($sessionName);
+    error_log('Debug: Session was not set. Session name is ' . $sessionName);
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/' . $sessionName,
+        'secure' => ($_SERVER['HTTPS'] === 'on'), // Set to true if using HTTPS
+        'httponly' => true,
+        'samesite' => 'Lax', // Adjust if needed
+    ]);
     @session_start();
 }
 

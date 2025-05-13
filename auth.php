@@ -1,5 +1,5 @@
-    <?php include(__DIR__ . '/resources/templates/header.php'); ?>
-    <?php include(__DIR__ . '/resources/controllers/session.php'); ?>
+<?php include(__DIR__ . '/resources/controllers/session.php'); ?>
+<?php include(__DIR__ . '/resources/templates/header.php'); ?>
     <br>
     <main role="main" class="container">
         <div class="jumbotron">

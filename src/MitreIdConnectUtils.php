@@ -8,30 +8,30 @@ function getMetadata($issuer)
 
 function getCurlRefresh($refreshToken, $tokenEndpoint, $clientId, $clientSecret = null, $scopes = null)
 {
-    return "curl -X POST '${tokenEndpoint}' "
-        . (!empty($clientSecret) ? "-u '${clientId}':'${clientSecret}' " : "")
+    return "curl -X POST '{$tokenEndpoint}' "
+        . (!empty($clientSecret) ? "-u '{$clientId}':'{$clientSecret}' " : "")
         . "-d 'grant_type=refresh_token"
-        . "&refresh_token=${refreshToken}"
-        . (empty($clientSecret) ? "&client_id=${clientId}" : "")
+        . "&refresh_token={$refreshToken}"
+        . (empty($clientSecret) ? "&client_id={$clientId}" : "")
         . ($scopes ? "&scope=" . implode("%20", $scopes) . "' " : "' ")
         . "| python -m json.tool;";
 }
 
 function getCurlUserInfo($accessToken, $userInfoEndpoint)
 {
-    return "curl ${userInfoEndpoint} "
-        . "-H 'Authorization: Bearer ${accessToken}' "
+    return "curl {$userInfoEndpoint} "
+        . "-H 'Authorization: Bearer {$accessToken}' "
         . "-H 'Content-type: application/json' "
         . "| python -m json.tool;";
 }
 
 function getCurlIntrospect($accessToken, $introspectionEndpoint, $clientId, $clientSecret)
 {
-    return "curl ${introspectionEndpoint} "
-        . (!empty($clientSecret) ? "-u '${clientId}':'${clientSecret}' " : "")
+    return "curl {$introspectionEndpoint} "
+        . (!empty($clientSecret) ? "-u '{$clientId}':'{$clientSecret}' " : "")
         . "-H 'Content-Type: application/x-www-form-urlencoded' "
-        . "-d 'token=${accessToken}' "
-        . (empty($clientSecret) ? "-d 'client_id=${clientId}' " : "")
+        . "-d 'token={$accessToken}' "
+        . (empty($clientSecret) ? "-d 'client_id={$clientId}' " : "")
         . "| python -m json.tool;";
 }
 
@@ -55,7 +55,7 @@ function getRefreshTokenTable($clientId, $accessToken, $issuer)
         if ($clientId == $refreshToken->clientId) {
             $table = $table
                 . "<tr>"
-                . "<th scope=\"row\">${index}</th>"
+                . "<th scope=\"row\">{$index}</th>"
                 . "<td>"
                 . "    <div class=\"token-value\">"
                 . "        <input style=\"width:100%\" type=\"text\" readonly=\"\" style=\"cursor: text;\" class=\"token-full\" value=\"" . $refreshToken->value . "\">"
